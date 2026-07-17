@@ -28,7 +28,10 @@ nav {
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand strong { font-size: 17px; letter-spacing: -.03em; }
 .brand-logo { width: 38px; height: 38px; object-fit: contain; }
-.status { margin-left: auto; display: flex; align-items: center; gap: 8px; color: #69736d; font: 11px/1 ui-monospace, monospace; }
+.nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.nav-actions a { padding: 8px 11px; border: 1px solid #dce4df; border-radius: 999px; color: #103b25; background: rgb(255 255 255 / 70%); font-size: 12px; font-weight: 700; text-decoration: none; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.nav-actions a:hover, .nav-actions a:focus-visible { border-color: #4edf95; background: #edfff6; outline: none; transform: translateY(-1px); }
+.status { display: flex; align-items: center; gap: 8px; color: #69736d; font: 11px/1 ui-monospace, monospace; }
 .status i, .product-bar > span i, .chat-heading span i, .api-status i { width: 7px; height: 7px; border-radius: 50%; background: #4edf95; box-shadow: 0 0 0 4px rgb(78 223 149 / 14%); }
 
 .hero {
@@ -124,6 +127,8 @@ h1 span { color: #2fcf7d; }
   nav, .hero { width: calc(100% - 32px); }
   .status { font-size: 0; }
   .status i { display: block; }
+  .nav-actions { gap: 8px; }
+  .nav-actions a { padding: 8px 10px; font-size: 11px; }
   .hero { min-height: auto; padding: 58px 0 44px; gap: 36px; }
   h1 { font-size: 54px; }
   .product-shell { height: auto; grid-template-columns: 1fr; }

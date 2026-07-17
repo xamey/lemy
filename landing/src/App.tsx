@@ -62,7 +62,12 @@ export function App() {
           <img className="brand-logo" src={lemyLogo} alt="" />
           <strong>Lemy</strong>
         </div>
-        <span className="status"><i /> Open source · self-hosted</span>
+        <div className="nav-actions">
+          <a href="https://github.com/xamey/lemy" rel="noreferrer" target="_blank">
+            GitHub
+          </a>
+          <span className="status"><i /> Open source · self-hosted</span>
+        </div>
       </nav>
 
       <section className="hero">
@@ -74,7 +79,7 @@ export function App() {
           <div className="provider-row" aria-label="Supported model providers">
             <span>OpenAI</span>
             <span>Anthropic</span>
-            <span>Compatible endpoints</span>
+            <span>Any OpenAI-compatible provider</span>
           </div>
         </div>
 
