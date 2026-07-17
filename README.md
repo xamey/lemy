@@ -98,6 +98,22 @@ export function ApiAgent({ bearer }: { bearer: string }) {
 }
 ```
 
+By default, `OpenApiAgentSidebar` shows a "New conversation" button. Clicking it starts a fresh client thread ID, which gives the agent a clean checkpoint context for the next conversation. To control threads from the host app, pass `threadId` and update it when Lemy requests a new one:
+
+```tsx
+import { useState } from "react";
+import { createLemyThreadId, OpenApiAgentSidebar } from "@lemy/react";
+
+const [threadId, setThreadId] = useState(createLemyThreadId);
+
+<OpenApiAgentSidebar
+  bearerToken={bearer}
+  runtimeUrl="https://agent.example.com/api/copilotkit"
+  threadId={threadId}
+  onThreadIdChange={setThreadId}
+/>
+```
+
 Use `OpenApiAgentProvider` instead when the application supplies its own CopilotKit UI. Pass the credential from authenticated application state; do not put it in a build-time environment variable.
 
 ### Consumer Integration Checklist

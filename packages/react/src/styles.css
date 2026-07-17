@@ -80,3 +80,40 @@
   color: #668071;
   background: #e7f8ef;
 }
+
+.lemyNewConversationButton {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #dce4df;
+  border-radius: 999px;
+  color: #103b25;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgb(18 35 25 / 9%);
+  font: 600 12px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.lemyNewConversationButton:hover {
+  border-color: #4edf95;
+  background: #edfff6;
+}
+
+.lemyNewConversationButton:focus-visible {
+  outline: 2px solid #4edf95;
+  outline-offset: 2px;
+}
+
+.lemySidebarTitle,
+.lemySidebarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lemySidebarTitle {
+  min-width: 0;
+}
+
+.lemySidebarActions {
+  margin-left: auto;
+}
