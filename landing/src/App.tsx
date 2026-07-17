@@ -75,6 +75,35 @@ export function App() {
           <p className="lead">
             Add a lightweight harness that lets your users communicate with your API in natural language. Your API only needs an OpenAPI schema.
           </p>
+          <div className="requirements" aria-label="What you need to run Lemy">
+            <div className="requirements-heading">
+              <span>You only need to</span>
+              <strong>bring three small pieces.</strong>
+            </div>
+            <div className="requirements-grid">
+              <div className="requirement-item">
+                <span className="requirement-number">01</span>
+                <div>
+                  <b>Pick a model</b>
+                  <code>LLM_API_KEY=••••••</code>
+                </div>
+              </div>
+              <div className="requirement-item">
+                <span className="requirement-number">02</span>
+                <div>
+                  <b>Drop in the chat</b>
+                  <code>&lt;OpenApiAgentSidebar /&gt;</code>
+                </div>
+              </div>
+              <div className="requirement-item">
+                <span className="requirement-number">03</span>
+                <div>
+                  <b>Run the harness</b>
+                  <code>docker compose up</code>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="provider-row" aria-label="Supported model providers">
             <span>OpenAI</span>
             <span>Anthropic</span>
