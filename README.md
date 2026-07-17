@@ -71,15 +71,6 @@ npm run dev --workspace @lemy/request-cycle-demo
 
 The demo is intentionally illustrative: it demonstrates the complete request cycle without accepting credentials or acting as the consumer integration test app.
 
-The project landing page is a separate workspace:
-
-```bash
-npm run dev --workspace @lemy/landing
-npm run build --workspace @lemy/landing
-```
-
-For GitHub Pages, publish the generated `landing/dist` directory.
-
 ## Add it to a React app
 
 The reusable package is in [`packages/react`](packages/react). It exports a provider and a ready-made sidebar.
@@ -191,7 +182,6 @@ Compatible models must support tool calling because the agent binds the MCP oper
 - `services/runtime`: CopilotKit Runtime proxy that forwards only the `Authorization` header to the agent.
 - `packages/react`: reusable CopilotKit provider/sidebar with bearer forwarding.
 - `examples/request-cycle-demo`: optional animated demo showing the full request cycle.
-- `landing`: project landing page source, suitable for GitHub Pages.
 
 ## Security defaults
 
