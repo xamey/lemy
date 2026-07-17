@@ -60,7 +60,6 @@ export function App() {
       <nav>
         <div className="brand">
           <img className="brand-logo" src={lemyLogo} alt="" />
-          <strong>Lemy</strong>
         </div>
         <div className="nav-actions">
           <a href="https://github.com/xamey/lemy" rel="noreferrer" target="_blank">

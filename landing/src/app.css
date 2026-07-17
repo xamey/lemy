@@ -27,7 +27,7 @@ nav {
 
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand strong { font-size: 17px; letter-spacing: -.03em; }
-.brand-logo { width: 38px; height: 38px; object-fit: contain; }
+.brand-logo { width: 76px; height: 76px; object-fit: contain; }
 .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .nav-actions a { padding: 8px 11px; border: 1px solid #dce4df; border-radius: 999px; color: #103b25; background: rgb(255 255 255 / 70%); font-size: 12px; font-weight: 700; text-decoration: none; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
 .nav-actions a:hover, .nav-actions a:focus-visible { border-color: #4edf95; background: #edfff6; outline: none; transform: translateY(-1px); }
