@@ -76,8 +76,8 @@ The demo is intentionally illustrative: it demonstrates the complete request cyc
 The reusable package is in [`packages/react`](packages/react). It exports a provider and a ready-made sidebar.
 
 ```tsx
-import { OpenApiAgentSidebar } from "@lemy/react";
-import "@lemy/react/styles.css";
+import { OpenApiAgentSidebar } from "@xameyz/lemy-react";
+import "@xameyz/lemy-react/styles.css";
 
 export function ApiAgent({ bearer }: { bearer: string }) {
   return (
@@ -93,7 +93,7 @@ By default, `OpenApiAgentSidebar` shows a "New conversation" button. Clicking it
 
 ```tsx
 import { useState } from "react";
-import { createLemyThreadId, OpenApiAgentSidebar } from "@lemy/react";
+import { createLemyThreadId, OpenApiAgentSidebar } from "@xameyz/lemy-react";
 
 const [threadId, setThreadId] = useState(createLemyThreadId);
 
