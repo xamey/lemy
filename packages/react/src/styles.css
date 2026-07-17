@@ -1,0 +1,82 @@
+@import "@copilotkit/react-core/v2/styles.css";
+
+[data-copilotkit] {
+  --background: #ffffff;
+  --foreground: #0b0f0d;
+  --card: #ffffff;
+  --card-foreground: #0b0f0d;
+  --popover: #ffffff;
+  --popover-foreground: #0b0f0d;
+  --primary: #4edf95;
+  --primary-foreground: #07110c;
+  --secondary: #f5f8f6;
+  --secondary-foreground: #0b0f0d;
+  --muted: #f5f8f6;
+  --muted-foreground: #68716c;
+  --accent: #edfff6;
+  --accent-foreground: #103b25;
+  --border: #e2e8e4;
+  --input: #e2e8e4;
+  --ring: #4edf95;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0b0f0d;
+  --sidebar-primary: #4edf95;
+  --sidebar-primary-foreground: #07110c;
+  --sidebar-accent: #edfff6;
+  --sidebar-accent-foreground: #103b25;
+  --sidebar-border: #e2e8e4;
+  --sidebar-ring: #4edf95;
+}
+
+[data-copilot-sidebar] {
+  padding: 0;
+  border-left: 1px solid #e2e8e4;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: -12px 0 48px rgb(18 35 25 / 7%);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+[data-copilot-sidebar] .copilotKitHeader {
+  min-height: 64px;
+  margin: 0;
+  padding: 0 20px;
+  border-color: #e8ece9;
+  background: rgb(255 255 255 / 92%);
+}
+
+[data-copilot-sidebar] .copilotKitHeader [class*="cpk:text-base"] {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+[data-copilot-sidebar] .copilotKitChat {
+  background: #fbfdfc;
+}
+
+[data-copilot-sidebar] .copilotKitChat h1 {
+  max-width: 300px;
+  margin: 0;
+  color: #18201b;
+  font-size: 28px;
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+[data-copilot-sidebar] .copilotKitInput {
+  border: 1px solid #dce4df;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgb(18 35 25 / 7%);
+}
+
+[data-copilot-sidebar] .copilotKitInput button[class*="cpk:bg-black"] {
+  color: #07110c;
+  background: #4edf95;
+}
+
+[data-copilot-sidebar] .copilotKitInput button[class*="cpk:bg-black"]:disabled {
+  color: #668071;
+  background: #e7f8ef;
+}

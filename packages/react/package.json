@@ -1,0 +1,40 @@
+{
+  "name": "@lemy/react",
+  "version": "0.1.0",
+  "description": "Drop-in CopilotKit React client for Lemy",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && vite build",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@copilotkit/react-core": "^1.63.1",
+    "react": ">=18.3",
+    "react-dom": ">=18.3"
+  },
+  "devDependencies": {
+    "@copilotkit/react-core": "1.63.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "latest",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "7.0.2",
+    "vite": "8.1.5",
+    "vitest": "4.1.10"
+  }
+}

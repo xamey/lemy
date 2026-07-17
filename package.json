@@ -1,0 +1,32 @@
+{
+  "name": "lemy",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "workspaces": [
+    "services/codemode",
+    "services/runtime",
+    "packages/react",
+    "examples/request-cycle-demo",
+    "landing"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "node-addon-api": "^8.5.0",
+    "node-gyp": "^11.5.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "overrides": {
+    "uuid": "11.1.1",
+    "@copilotkit/runtime@1.63.1": {
+      "uuid": "11.1.1"
+    }
+  }
+}
