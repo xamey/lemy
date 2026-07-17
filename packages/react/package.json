@@ -1,6 +1,6 @@
 {
   "name": "@xameyz/lemy-react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Drop-in CopilotKit React client for Lemy",
   "license": "Apache-2.0",
   "type": "module",
