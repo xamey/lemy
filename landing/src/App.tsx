@@ -140,7 +140,7 @@ export function App() {
           <form className="access-form" id="access" onSubmit={requestAccess}>
             <label htmlFor="access-email">Request Lemy Cloud access</label>
             <div><input id="access-email" type="email" required placeholder="you@company.com" value={email} onChange={(event) => { setEmail(event.target.value); setAccessState("idle"); }} /><button disabled={accessState === "sending"}>{accessState === "sending" ? "Sending…" : "Join waitlist"}</button></div>
-            <small aria-live="polite">{accessState === "limited" ? "Too many requests. Try again in a minute." : accessState === "error" ? "Could not send your request. Try again." : "Already approved? Use this email with Google or GitHub."}</small>
+            <small aria-live="polite">{accessState === "limited" ? "Too many requests. Try again in a minute." : accessState === "error" ? "Could not send your request. Try again." : "Free during beta · bring your own LLM key · 500 OpenAPI calls per month."}</small>
           </form>
         </div>
 
@@ -206,7 +206,7 @@ export function App() {
       <section className="deploy-section" id="deploy">
         <header className="section-heading"><span className="overline">Choose your path</span><h2>Cloud convenience.<br />Self-hosted control.</h2><p>The same Lemy runtime, wherever you want to operate it.</p></header>
         <div className="deploy-grid">
-          <article className="deploy-card cloud-card"><div className="deploy-card-heading"><span>Managed</span><i>Lemy Cloud</i></div><h3>Connect an API.<br />Receive a runtime URL.</h3><p>Connect your OpenAI or Anthropic key once, choose a model per project, add external MCPs and ship. Keys stay encrypted and usage is billed directly by your provider.</p><div className="cloud-preview"><header><span>tasks-production</span><i>Ready</i></header><div><small>RUNTIME URL</small><code>/runtime/p_91k…</code><span>Copy</span></div></div></article>
+          <article className="deploy-card cloud-card"><div className="deploy-card-heading"><span>Free during beta</span><i>Lemy Cloud</i></div><h3>Connect an API.<br />Receive a runtime URL.</h3><p>Bring an OpenAI or Anthropic key, choose a model and ship. Lemy Cloud is free for now and includes 500 OpenAPI calls per workspace each month.</p><div className="cloud-preview"><header><span>tasks-production</span><i>Ready</i></header><div><small>RUNTIME URL</small><code>/runtime/p_91k…</code><span>Copy</span></div></div></article>
           <article className="deploy-card host-card"><div className="deploy-card-heading"><span>Source available</span><i>Self-hosted</i></div><h3>Your keys.<br />Your Cloudflare account.</h3><p>Deploy the same Worker to your account with Durable Objects and D1 included. Each workspace connects its own OpenAI or Anthropic provider.</p><div className="code-window"><header><span><i /><i /><i /></span><code>terminal</code></header><pre><em>$</em> cp apps/cloud/.dev.vars.example .dev.vars{"\n"}<em>$</em> npm run dev --workspace @lemy/cloud{"\n"}<b>✓</b> Think runtime ready :8788</pre></div></article>
         </div>
       </section>
