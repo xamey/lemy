@@ -410,7 +410,10 @@ function AdminBackoffice() {
   }
 
   async function changeAccess(request: AccessRequest, action: "grant" | "revoke") {
-    if (action === "revoke" && !window.confirm(`Revoke access for ${request.email}?`)) return;
+    const rejecting = action === "revoke" && request.status === "pending";
+    if (action === "revoke" && !window.confirm(
+      `${rejecting ? "Reject the request from" : "Revoke access for"} ${request.email}?`,
+    )) return;
     try {
       setBusy(request.id);
       const result = await api<{ emailSent?: boolean }>(`/api/admin/access-requests/${request.id}/${action}`, {
@@ -425,7 +428,7 @@ function AdminBackoffice() {
         ? result.emailSent
           ? `Access granted and ${request.email} was notified.`
           : `Access granted. Configure Resend to notify ${request.email} by email.`
-        : `Access revoked for ${request.email}.`);
+        : `${rejecting ? "Request rejected" : "Access revoked"} for ${request.email}.`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not change access");
     } finally {
@@ -457,7 +460,7 @@ function AdminBackoffice() {
         {notice && <p className="page-success">{notice}</p>}
         {error && <p className="page-error">{error}</p>}
         <div className="admin-columns">
-          <div><h2>Pending <span>{pending.length}</span></h2>{pending.length === 0 ? <p className="admin-empty">No pending requests.</p> : pending.map((request) => <article key={request.id}><div><b>{request.email}</b><small>Requested {new Date(request.requestedAt).toLocaleDateString()}</small></div><button className="primary-button" disabled={busy !== null} onClick={() => changeAccess(request, "grant")}>{busy === request.id ? "Saving…" : "Accept"}</button></article>)}</div>
+          <div><h2>Pending <span>{pending.length}</span></h2>{pending.length === 0 ? <p className="admin-empty">No pending requests.</p> : pending.map((request) => <article key={request.id}><div><b>{request.email}</b><small>Requested {new Date(request.requestedAt).toLocaleDateString()}</small></div><span className="admin-actions"><button className="danger" disabled={busy !== null} onClick={() => changeAccess(request, "revoke")}>Reject</button><button className="primary-button" disabled={busy !== null} onClick={() => changeAccess(request, "grant")}>{busy === request.id ? "Saving…" : "Accept"}</button></span></article>)}</div>
           <div><h2>Granted <span>{granted.length}</span></h2>{granted.length === 0 ? <p className="admin-empty">No granted access.</p> : granted.map((request) => <article key={request.id}><div><b>{request.email}</b><small>Cloud access active</small></div><button className="danger" disabled={busy !== null} onClick={() => changeAccess(request, "revoke")}>{busy === request.id ? "Saving…" : "Revoke"}</button></article>)}</div>
         </div>
       </section>

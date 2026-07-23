@@ -81,6 +81,7 @@ button { cursor: pointer; }
 .admin-columns article b { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .admin-columns article small { color: #939c96; font-size: 8px; }
 .admin-columns article button { flex: 0 0 auto; }
+.admin-actions { display: flex; gap: 7px; }
 .admin-columns .danger { min-height: 38px; padding: 0 13px; border: 1px solid #edc9c9; border-radius: 9px; color: #a94343; background: #fff5f5; font-size: 9px; font-weight: 800; }
 .admin-columns button:disabled { cursor: wait; opacity: .5; }
 .admin-empty { margin: 0; padding: 45px 12px; border-top: 1px solid #e2e7e3; color: #8a948d; font-size: 10px; text-align: center; }
