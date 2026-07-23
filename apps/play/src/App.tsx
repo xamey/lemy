@@ -75,10 +75,14 @@ export function App() {
           </div>
           {error && <p className="error">{error}</p>}
           <footer>
-            <div><strong>Test credentials</strong><button onClick={() => void reset()}>Reset demo</button></div>
+            <div><strong>Lemy project configuration</strong><button onClick={() => void reset()}>Reset demo</button></div>
+            <span>Project name: <code>Lemy playground</code></span>
+            <span>OpenAPI schema: <a href="/openapi.json">https://play.lemy.online/openapi.json</a></span>
+            <span>API base URL: <code>https://play.lemy.online</code></span>
+            <span>Bearer validation URL: <code>https://play.lemy.online/auth/validate</code></span>
+            <span>Browser origins: <code>https://play.lemy.online</code></span>
+            <span>Allow mutating tools: <strong>On</strong></span>
             <code>Bearer {bearerToken}</code>
-            <span>Schema: <a href="/openapi.json">/openapi.json</a></span>
-            <span>Validation: <code>/auth/validate</code></span>
           </footer>
         </section>
         <aside className="assistant">
