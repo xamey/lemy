@@ -1074,14 +1074,27 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
     });
   });
 
-  app.all("/runtime/:projectId/agent/:threadId", async (c) => {
+  app.all("/runtime/:projectId/agent/:threadId/*", async (c) => {
     const projectId = c.req.param("projectId");
     const threadId = c.req.param("threadId");
     const project = await getProjectById(c.env.DB, projectId);
     if (!project || project.status !== "ready") return c.text("Project not found", 404);
     if (!await hasCloudAccess(c.env.DB, project.ownerId)) return c.text("Project not found", 404);
     const origin = c.req.header("origin");
-    if (origin && !runtimeCorsOrigin(project, c.req.raw)) return c.text("Origin not allowed", 403);
+    const allowedOrigin = runtimeCorsOrigin(project, c.req.raw);
+    if (origin && !allowedOrigin) return c.text("Origin not allowed", 403);
+    if (c.req.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Headers": "content-type",
+          "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+          "Access-Control-Allow-Origin": allowedOrigin ?? "",
+          "Access-Control-Max-Age": "600",
+          Vary: "Origin",
+        },
+      });
+    }
     const token = c.req.query("token") ?? "";
     let session;
     try {
@@ -1092,7 +1105,7 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
         threadId,
       );
     } catch {
-      return c.text("Runtime session rejected", 401);
+      return withRuntimeCors(c.text("Runtime session rejected", 401), allowedOrigin);
     }
     let failure = rateLimitFailure(await checkRateLimit(
       c.env,
@@ -1106,12 +1119,12 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
         `runtime-connect-principal:${project.id}:${session.principal}`,
       ));
     }
-    if (failure) return failure;
+    if (failure) return withRuntimeCors(failure, allowedOrigin);
     const url = new URL(c.req.url);
     url.searchParams.delete("token");
     const headers = new Headers(c.req.raw.headers);
     headers.set("x-lemy-runtime-session", token);
-    return services.agent(
+    return withRuntimeCors(await services.agent(
       new Request(url, {
         body: ["GET", "HEAD"].includes(c.req.method) ? undefined : c.req.raw.body,
         headers,
@@ -1119,7 +1132,7 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
       }),
       c.env,
       await runtimeAgentName(project.id, session.principal, threadId),
-    );
+    ), allowedOrigin);
   });
 
   return app;

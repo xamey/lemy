@@ -473,12 +473,14 @@ describe("cloud API", () => {
     expect(validate).toHaveBeenCalledWith("Bearer customer-secret", projectBody.bearerValidationUrl);
 
     const routed = await app.fetch(new Request(
-      `https://cloud.test${runtime.runtimePath}?token=${encodeURIComponent(runtime.token)}`,
+      `https://cloud.test${runtime.runtimePath}/get-messages?token=${encodeURIComponent(runtime.token)}`,
       { headers: { origin: "https://app.example.com" } },
     ), testEnv);
 
     expect(await routed.text()).toBe("agent");
+    expect(routed.headers.get("access-control-allow-origin")).toBe("https://app.example.com");
     const [request, , agentName] = agent.mock.calls[0];
+    expect(new URL(request.url).pathname).toBe(`${runtime.runtimePath}/get-messages`);
     expect(new URL(request.url).searchParams.has("token")).toBe(false);
     expect(request.headers.get("x-lemy-runtime-session")).toBe(runtime.token);
     expect(agentName).toMatch(new RegExp(`^${project.id}--[A-Za-z0-9_-]{22}--${threadId}$`));
