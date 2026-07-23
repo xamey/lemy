@@ -57,7 +57,7 @@ export function App() {
       <nav>
         <img src={lemyLogo} alt="Lemy" />
         <span>Playground</span>
-        <a href="https://cloud.lemy.online">Lemy Cloud ↗</a>
+        <a href="https://cloud.lemy.online" rel="noreferrer" target="_blank">Lemy Cloud ↗</a>
       </nav>
       <div className="layout">
         <section className="tasks">
@@ -91,20 +91,31 @@ export function App() {
               />
             </>
           ) : (
-            <form onSubmit={connect}>
-              <span>One last connection</span>
-              <h2>Paste your Lemy runtime URL</h2>
-              <p>Create a project in Lemy Cloud with this playground’s schema, base URL, and validation endpoint.</p>
-              <input
-                aria-label="Lemy runtime URL"
-                onChange={(event) => setDraftRuntimeUrl(event.target.value)}
-                placeholder="https://cloud.lemy.online/runtime/…"
-                required
-                type="url"
-                value={draftRuntimeUrl}
-              />
-              <button>Connect Lemy</button>
-              <small>Use <code>https://play.lemy.online</code> for both the API base and allowed origin.</small>
+            <form className="setup" onSubmit={connect}>
+              <span>Connect the live demo</span>
+              <h2>Configure one Cloud project</h2>
+              <p>In <a href="https://cloud.lemy.online" rel="noreferrer" target="_blank">Lemy Cloud</a>, add your model provider key, then create a project with these values.</p>
+              <dl>
+                <div><dt>Project name</dt><dd>Lemy playground</dd></div>
+                <div><dt>OpenAPI schema URL</dt><dd><code>https://play.lemy.online/openapi.json</code></dd></div>
+                <div><dt>API base URL</dt><dd><code>https://play.lemy.online</code></dd></div>
+                <div><dt>Bearer validation URL</dt><dd><code>https://play.lemy.online/auth/validate</code></dd></div>
+                <div><dt>Browser origins</dt><dd><code>https://play.lemy.online</code></dd></div>
+                <div><dt>Allow mutating tools</dt><dd><strong>On</strong></dd></div>
+              </dl>
+              <div className="runtime-connect">
+                <strong>Then paste the project runtime URL</strong>
+                <input
+                  aria-label="Lemy runtime URL"
+                  onChange={(event) => setDraftRuntimeUrl(event.target.value)}
+                  placeholder="https://cloud.lemy.online/runtime/…"
+                  required
+                  type="url"
+                  value={draftRuntimeUrl}
+                />
+                <button>Connect Lemy</button>
+                <small>This client sends <code>Bearer demo-token</code>. Choose any supported provider and model in your project.</small>
+              </div>
             </form>
           )}
         </aside>
