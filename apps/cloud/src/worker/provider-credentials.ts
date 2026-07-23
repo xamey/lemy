@@ -151,6 +151,16 @@ export async function hasValidatedProvider(
   ).bind(ownerId, provider).first());
 }
 
+export async function deleteProviderCredential(
+  db: D1Database,
+  ownerId: string,
+  provider: LlmProvider,
+): Promise<void> {
+  await db.prepare(
+    "DELETE FROM provider_credential WHERE owner_id = ? AND provider = ?",
+  ).bind(ownerId, provider).run();
+}
+
 export async function saveValidatedProviderCredential(
   env: Env,
   ownerId: string,

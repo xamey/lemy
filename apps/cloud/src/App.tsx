@@ -805,6 +805,22 @@ function ProviderSettings({ catalog, onChanged }: {
     }
   }
 
+  async function remove(provider: LlmProvider) {
+    const name = provider === "openai" ? "OpenAI" : "Anthropic";
+    if (!window.confirm(`Delete your ${name} API key? Projects using it will stop working.`)) return;
+    setBusy(provider);
+    setError("");
+    try {
+      await api(`/api/providers/${provider}`, { method: "DELETE" });
+      setKeys((current) => ({ ...current, [provider]: "" }));
+      await onChanged();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Could not delete the API key");
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <section className="provider-settings">
       <header>
@@ -844,7 +860,7 @@ function ProviderSettings({ catalog, onChanged }: {
                   {busy === configuration.provider ? "Checking…" : configuration.configured ? "Replace" : "Activate"}
                 </button>
               </form>
-              {configuration.configured && <button className="provider-refresh" onClick={() => validate(configuration.provider)} disabled={busy !== null}>Refresh validation</button>}
+              {configuration.configured && <div className="provider-actions"><button className="provider-refresh" onClick={() => validate(configuration.provider)} disabled={busy !== null}>Refresh validation</button><button className="provider-remove" onClick={() => remove(configuration.provider)} disabled={busy !== null}>Delete key</button></div>}
             </article>
           );
         })}

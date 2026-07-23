@@ -146,8 +146,11 @@ button { cursor: pointer; }
 .provider-card input { min-width: 0; height: 38px; padding: 0 10px; border: 1px solid #d6dfd9; border-radius: 8px; color: #27342c; background: #fff; font-size: 9px; outline: none; }
 .provider-card input:focus { border-color: #55d493; box-shadow: 0 0 0 3px rgb(78 223 149 / 12%); }
 .provider-card .primary-button { min-height: 38px; }
-.provider-refresh { margin-top: 11px; padding: 0; border: 0; color: #28764d; background: transparent; font-size: 8px; font-weight: 800; }
-.provider-refresh:disabled { cursor: wait; opacity: .5; }
+.provider-actions { margin-top: 11px; display: flex; gap: 14px; }
+.provider-actions button { padding: 0; border: 0; background: transparent; font-size: 8px; font-weight: 800; }
+.provider-refresh { color: #28764d; }
+.provider-remove { color: #a94343; }
+.provider-actions button:disabled { cursor: wait; opacity: .5; }
 .provider-settings > .form-error { margin: 12px 0 0; }
 
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }

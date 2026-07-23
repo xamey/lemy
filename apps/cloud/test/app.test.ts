@@ -710,6 +710,13 @@ describe("cloud API", () => {
       ]),
       models: [],
     });
+
+    const removed = await app.fetch(new Request(
+      "https://cloud.test/api/providers/openai",
+      { method: "DELETE", headers: { "x-test-user": "user-1" } },
+    ), testEnv);
+    expect(removed.status).toBe(204);
+    expect(await getProviderApiKey(testEnv, "user-1", "openai")).toBeNull();
   });
 
   it("does not expose unexpected provider errors", async () => {

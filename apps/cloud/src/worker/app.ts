@@ -21,6 +21,7 @@ import { sendAccessApprovalEmail } from "./access-email";
 import { createControlMcpServer } from "./control-mcp";
 import { getCloudBudgetUsage } from "./cloud-budget";
 import {
+  deleteProviderCredential,
   getConfiguredProviderCredential,
   hasValidatedProvider,
   listProviderConfigurations,
@@ -493,6 +494,12 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
         error: error.message,
       }, error.kind === "unavailable" ? 502 : 400);
     }
+  });
+  app.delete("/api/providers/:provider", async (c) => {
+    const provider = providerName(c.req.param("provider"));
+    if (!provider) return c.json({ error: "Provider not found" }, 404);
+    await deleteProviderCredential(c.env.DB, userId(c.get("session"))!, provider);
+    return c.body(null, 204);
   });
   app.post("/api/providers/:provider/validate", async (c) => {
     const provider = providerName(c.req.param("provider"));
