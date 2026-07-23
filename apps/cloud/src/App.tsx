@@ -1,7 +1,9 @@
 import { type FormEvent, useEffect, useState } from "react";
 
+import anthropicMark from "./anthropic-mark.svg";
 import githubMark from "./github-mark.svg";
 import lemyLogo from "../../../logo.png";
+import openaiMark from "./openai-mark.svg";
 import { accessRequestError } from "./access-request-error";
 import { authClient } from "./auth-client";
 import {
@@ -833,7 +835,7 @@ function ProviderSettings({ catalog, onChanged }: {
           return (
             <article className={`provider-card ${configuration.status}`} key={configuration.provider}>
               <header>
-                <div className="provider-mark">{configuration.provider === "openai" ? "◎" : "A"}</div>
+                <div className="provider-mark"><img src={configuration.provider === "openai" ? openaiMark : anthropicMark} alt="" aria-hidden="true" /></div>
                 <div><h3>{name}</h3><span>{configuration.status === "validated" ? "Available" : configuration.status === "invalid" ? "Needs attention" : "Not connected"}</span></div>
                 <i />
               </header>

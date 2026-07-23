@@ -136,6 +136,7 @@ button { cursor: pointer; }
 .provider-card.invalid { border-color: #efc5c5; background: #fffafa; }
 .provider-card > header { display: grid; grid-template-columns: 39px 1fr 8px; align-items: center; gap: 11px; }
 .provider-mark { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 10px; color: #eafff3; background: #111713; font-size: 17px; font-weight: 800; }
+.provider-mark img { width: 22px; height: 22px; filter: invert(1); }
 .provider-card h3 { margin: 0 0 3px; font-size: 13px; letter-spacing: -.03em; }
 .provider-card header span { color: #88928c; font: 750 7px/1 ui-monospace, monospace; text-transform: uppercase; }
 .provider-card header > i { width: 7px; height: 7px; border-radius: 50%; background: #aeb7b1; }
