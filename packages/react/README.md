@@ -8,7 +8,9 @@ Drop-in React chat for a Lemy project running on Cloudflare Think.
 npm install @xameyz/lemy-react @cloudflare/think agents ai
 ```
 
-`react` and `react-dom` are peer dependencies.
+React 19 is required.
+
+For React Native, use `@xameyz/lemy-react-native`.
 
 ## Use the sidebar
 

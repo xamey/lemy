@@ -7,6 +7,7 @@
     "apps/cloud",
     "services/codemode",
     "packages/react",
+    "packages/react-native",
     "examples/request-cycle-demo",
     "landing"
   ],

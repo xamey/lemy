@@ -78,6 +78,9 @@ The bearer is sent only to `POST /runtime/:projectId/session`. Lemy validates it
 
 Use `OpenApiAgentProvider` and `useLemyChat()` for a custom interface. The client speaks the native Cloudflare Agents/Think protocol; it does not advertise generic AG-UI compatibility.
 
+React Native apps can use the headless `@xameyz/lemy-react-native` package with
+the same runtime URL, bearer exchange, threads, and approval API.
+
 ## Bearer validation contract
 
 Lemy sends `GET` with the user's `Authorization` header. The endpoint must return `200` JSON with a stable `sub`:

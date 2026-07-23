@@ -1,20 +1,22 @@
 {
-  "name": "@xameyz/lemy-react",
-  "version": "0.4.0",
-  "description": "Drop-in Cloudflare Think React client for Lemy",
+  "name": "@xameyz/lemy-react-native",
+  "version": "0.1.0",
+  "description": "Headless React Native client for Lemy",
   "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://github.com/xamey/lemy#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xamey/lemy.git",
-    "directory": "packages/react"
+    "directory": "packages/react-native"
   },
   "bugs": {
     "url": "https://github.com/xamey/lemy/issues"
   },
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -23,24 +25,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.js"
-    },
-    "./headless": {
-      "types": "./dist/headless.d.ts",
-      "import": "./dist/headless.js"
-    },
-    "./styles.css": "./dist/styles.css"
+    }
   },
-  "sideEffects": [
-    "*.css"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && vite build",
-    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xameyz/lemy-react": "^0.4.0"
   },
   "peerDependencies": {
     "@cloudflare/think": "^0.13.0",
@@ -51,14 +43,9 @@
   "devDependencies": {
     "@cloudflare/think": "0.13.0",
     "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "latest",
     "agents": "0.17.4",
     "ai": "6.0.233",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "typescript": "7.0.2",
-    "vite": "8.1.5",
-    "vitest": "4.1.10"
+    "typescript": "7.0.2"
   }
 }

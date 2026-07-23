@@ -7,8 +7,11 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       cssFileName: "styles",
-      entry: "src/index.tsx",
-      fileName: "index",
+      entry: {
+        core: "src/core.ts",
+        headless: "src/headless.tsx",
+        index: "src/index.tsx",
+      },
       formats: ["es"],
     },
     rollupOptions: {
