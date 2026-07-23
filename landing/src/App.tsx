@@ -9,8 +9,8 @@ const tasks = [
 const linearLogo = "https://cdn.simpleicons.org/linear/5E6AD2";
 const datadogLogo = "https://cdn.simpleicons.org/datadog/632CA6";
 const configuredCloudUrl = (import.meta.env.VITE_LEMY_CLOUD_URL || "").replace(/\/$/, "");
-const cloudApiUrl = configuredCloudUrl || "http://localhost:8788";
-const cloudAppUrl = configuredCloudUrl || "http://localhost:3001";
+const cloudApiUrl = configuredCloudUrl || "https://cloud.lemy.online";
+const cloudAppUrl = configuredCloudUrl || "https://cloud.lemy.online";
 
 interface Prompt {
   text: string;
