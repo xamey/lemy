@@ -230,7 +230,7 @@ function withRuntimeCors(response: Response, origin: string | null): Response {
 
 function accessRequestOrigin(env: Env, request: Request): string | null {
   const origin = request.headers.get("origin");
-  return origin && [env.PUBLIC_APP_URL, ...(env.ACCESS_REQUEST_ORIGINS ?? "").split(",")]
+  return origin && [env.PUBLIC_APP_URL ?? "", ...(env.ACCESS_REQUEST_ORIGINS ?? "").split(",")]
     .some((candidate) => candidate.trim().replace(/\/$/, "") === origin)
     ? origin
     : null;

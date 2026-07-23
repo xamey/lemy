@@ -4,6 +4,11 @@
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-07-21",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "vars": {
+    "BETTER_AUTH_URL": "https://cloud.lemy.online",
+    "PUBLIC_APP_URL": "https://cloud.lemy.online",
+    "ACCESS_REQUEST_ORIGINS": "https://lemy.online"
+  },
   "limits": {
     "cpu_ms": 100,
     "subrequests": 150

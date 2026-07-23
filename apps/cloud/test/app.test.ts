@@ -186,6 +186,23 @@ describe("cloud API", () => {
     expect(response.headers.get("access-control-allow-origin")).toBe(cloudOrigin);
   });
 
+  it("rejects access requests safely when public origins are not configured", async () => {
+    const response = await app.fetch(new Request("https://cloud.test/api/access-requests", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://lemy.example.com",
+      },
+      body: JSON.stringify({ email: "cloud-login@example.com" }),
+    }), {
+      ...testEnv,
+      ACCESS_REQUEST_ORIGINS: undefined,
+      PUBLIC_APP_URL: undefined,
+    } as unknown as typeof testEnv);
+
+    expect(response.status).toBe(403);
+  });
+
   it("grants and revokes access by requested email through the admin backoffice", async () => {
     const now = Date.now();
     await env.DB.prepare("DELETE FROM access_request WHERE email = 'pending-user@example.com'").run();
