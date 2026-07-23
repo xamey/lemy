@@ -454,7 +454,7 @@ function AdminBackoffice() {
   const granted = requests.filter(({ status }) => status === "granted");
   return (
     <main className="admin-page">
-      <nav><div className="cloud-brand"><img src={lemyLogo} alt="Lemy" /><span>Admin</span></div><button onClick={() => setAuthorization("")}>Sign out</button></nav>
+      <nav><a className="cloud-brand" href="/"><img src={lemyLogo} alt="Lemy" /><span>Admin</span></a><button onClick={() => setAuthorization("")}>Sign out</button></nav>
       <section>
         <header><span className="eyebrow">Invite-only Cloud</span><h1>Access</h1><p>Approve requested emails before their matching Google or GitHub account can enter Lemy Cloud.</p></header>
         {notice && <p className="page-success">{notice}</p>}
@@ -927,7 +927,7 @@ function Dashboard({ user, local }: { user: SessionData["user"]; local: boolean 
   return (
     <main className="dashboard">
       <nav className="cloud-nav">
-        <div className="cloud-brand"><img src={lemyLogo} alt="Lemy" /><span>Cloud</span></div>
+        <a className="cloud-brand" href="/"><img src={lemyLogo} alt="Lemy" /><span>Cloud</span></a>
         <div className="nav-context"><small>Workspace</small><b>Agent operations</b></div>
         <div className="account-menu"><div>{user.image ? <img src={user.image} alt="" /> : user.name.slice(0, 1).toUpperCase()}</div><span><b>{user.name}</b><small>{user.email}</small></span>{local ? <small>Local mode</small> : <button onClick={async () => { await authClient.signOut(); window.location.reload(); }}>Sign out</button>}</div>
       </nav>
