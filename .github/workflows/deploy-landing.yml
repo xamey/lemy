@@ -37,7 +37,7 @@ jobs:
 
       - run: npm run build --workspace @lemy/landing
         env:
-          BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: /
           VITE_LEMY_CLOUD_URL: ${{ vars.LEMY_CLOUD_URL }}
 
       - uses: actions/configure-pages@v5
