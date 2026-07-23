@@ -472,6 +472,12 @@ describe("cloud API", () => {
     expect(runtime.token).not.toContain("customer-secret");
     expect(validate).toHaveBeenCalledWith("Bearer customer-secret", projectBody.bearerValidationUrl);
 
+    expect((await startRuntime(project.id, { threadId })).status).toBe(200);
+    const leaseCount = await env.DB.prepare(
+      "SELECT COUNT(*) AS count FROM runtime_session_lease WHERE project_id = ?",
+    ).bind(project.id).first<{ count: number }>();
+    expect(leaseCount?.count).toBe(1);
+
     const routed = await app.fetch(new Request(
       `https://cloud.test${runtime.runtimePath}/get-messages?token=${encodeURIComponent(runtime.token)}`,
       { headers: { origin: "https://app.example.com" } },

@@ -1041,6 +1041,7 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
         c.env.DB,
         project.id,
         principal,
+        threadId,
         expiresAt * 1_000,
       );
       return withRuntimeCors(Response.json({
