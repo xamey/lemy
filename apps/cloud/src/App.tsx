@@ -184,20 +184,20 @@ function Login() {
       <section className="login-copy">
         <div className="login-orb" aria-hidden="true" />
         <img src={lemyLogo} alt="Lemy" />
-        <span className="eyebrow">Managed agent infrastructure</span>
+        <span className="eyebrow">Invite-only · free beta</span>
         <h1>Give your API<br /><em>an agent.</em></h1>
-        <p>Connect an OpenAPI schema. Configure its model, tools and policies. Ship one secure runtime URL.</p>
-        <div className="login-points">
-          <span><i>1</i> Your identity and API permissions stay yours</span>
-          <span><i>2</i> MCPs, human approval and skills are built in</span>
-          <span><i>3</i> Every project runs in an isolated environment</span>
+        <p>Bring your OpenAI or Anthropic key. Lemy runs the secure agent layer free during beta, with up to 500 tool calls per account each month.</p>
+        <div className="login-offer">
+          <span><b>$0</b><small>Lemy Cloud during beta</small></span>
+          <span><b>BYOK</b><small>Your provider, your bill</small></span>
+          <span><b>500</b><small>Tool calls every month</small></span>
         </div>
       </section>
       <section className="login-card">
         <div className="login-heading">
-          <span className="invite-badge">Invite-only beta</span>
+          <span className="invite-badge">Free beta · 500 calls / month</span>
           <h2>Login to Lemy Cloud</h2>
-          <p>Request access with your email. Once approved, sign in with the matching Google or GitHub account.</p>
+          <p>Request an invite, then sign in with the matching Google or GitHub account. Add your LLM key inside your workspace.</p>
         </div>
         <form className="login-access" onSubmit={requestAccess}>
           <label htmlFor="access-email">Email</label>
