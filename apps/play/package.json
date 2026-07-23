@@ -1,0 +1,35 @@
+{
+  "name": "@lemy/play",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && wrangler deploy --dry-run --outdir worker-dist",
+    "deploy": "vite build && wrangler deploy",
+    "dev": "concurrently -k -n api,web -c green,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "wrangler dev --port 8790",
+    "dev:web": "vite --host 0.0.0.0 --port 3002",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xameyz/lemy-react": "0.4.0",
+    "@cloudflare/think": "0.13.0",
+    "agents": "0.17.4",
+    "ai": "6.0.233",
+    "hono": "4.12.31",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260722.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.3",
+    "concurrently": "9.2.1",
+    "typescript": "7.0.2",
+    "vite": "8.1.5",
+    "vitest": "4.1.10",
+    "wrangler": "4.113.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "lemy-play",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-07-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/auth/*", "/openapi.json", "/tasks", "/tasks/*"]
+  },
+  "routes": [
+    {
+      "pattern": "play.lemy.online",
+      "custom_domain": true
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "TASKS", "class_name": "PlayTasks" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["PlayTasks"] }
+  ]
+}
