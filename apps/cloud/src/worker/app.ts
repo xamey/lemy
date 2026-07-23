@@ -222,7 +222,7 @@ function runtimeCorsOrigin(project: { corsOrigins: string[] }, request: Request)
 }
 
 function withRuntimeCors(response: Response, origin: string | null): Response {
-  if (!origin) return response;
+  if (!origin || response.webSocket) return response;
   const headers = new Headers(response.headers);
   headers.set("Access-Control-Allow-Origin", origin);
   headers.set("Vary", "Origin");

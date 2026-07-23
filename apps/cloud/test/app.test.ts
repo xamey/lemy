@@ -490,6 +490,15 @@ describe("cloud API", () => {
     expect(new URL(request.url).searchParams.has("token")).toBe(false);
     expect(request.headers.get("x-lemy-runtime-session")).toBe(runtime.token);
     expect(agentName).toMatch(new RegExp(`^${project.id}--[A-Za-z0-9_-]{22}--${threadId}$`));
+
+    const sockets = new WebSocketPair();
+    agent.mockResolvedValueOnce(new Response(null, { status: 101, webSocket: sockets[0] }));
+    const upgraded = await app.fetch(new Request(
+      `https://cloud.test${runtime.runtimePath}/websocket?token=${encodeURIComponent(runtime.token)}`,
+      { headers: { origin: "https://app.example.com", upgrade: "websocket" } },
+    ), testEnv);
+    expect(upgraded.status).toBe(101);
+    expect(upgraded.webSocket).toBe(sockets[0]);
   });
 
   it("runs a project playground turn with the same bearer validation", async () => {
