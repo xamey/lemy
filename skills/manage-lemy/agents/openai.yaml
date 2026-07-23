@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Lemy"
+  short_description: "Create and configure Lemy Cloud projects"
+  default_prompt: "Use $manage-lemy to configure my Lemy Cloud projects safely."

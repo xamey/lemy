@@ -4,7 +4,7 @@ import { createMcpHandler } from "agents/mcp";
 
 import { assertAllowedOperation, buildApiUrl, resolveApiBaseUrl } from "./openapi.js";
 
-interface Env {
+export interface CodeModeEnv {
   LOADER: WorkerLoader;
   OPENAPI_SCHEMA_URL: string;
   OPENAPI_BASE_URL?: string;
@@ -12,13 +12,43 @@ interface Env {
   ALLOW_MUTATIONS?: string;
 }
 
+export interface OpenApiMcpConfig {
+  schemaUrl: string;
+  baseUrl?: string | null;
+  apiName?: string | null;
+  allowMutations?: boolean;
+}
+
 const SCHEMA_FETCH_TIMEOUT_MS = 10_000;
 const API_FETCH_TIMEOUT_MS = 30_000;
+const MAX_SCHEMA_BYTES = 1_000_000;
+const MAX_API_RESPONSE_BYTES = 128_000;
+const MAX_CACHED_SPECS = 20;
 const REDACTED = "[REDACTED]";
 
-let specCache:
-  | { schemaUrl: string; promise: Promise<Record<string, unknown>> }
-  | undefined;
+const specCache = new Map<string, Promise<Record<string, unknown>>>();
+
+async function limitedText(response: Response, maxBytes: number): Promise<string> {
+  const declared = Number(response.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declared) && declared > maxBytes) throw new Error("Upstream response is too large");
+  if (!response.body) return "";
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let size = 0;
+  let text = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > maxBytes) {
+      await reader.cancel();
+      throw new Error("Upstream response is too large");
+    }
+    text += decoder.decode(value, { stream: true });
+  }
+  return text + decoder.decode();
+}
 
 function isBearer(value: string | null): value is string {
   return Boolean(value && /^Bearer\s+\S+$/i.test(value));
@@ -30,13 +60,18 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
     : undefined;
 }
 
-async function loadSpec(schemaUrl: string): Promise<Record<string, unknown>> {
-  if (specCache?.schemaUrl === schemaUrl) return specCache.promise;
+export async function loadOpenApiSpec(
+  schemaUrl: string,
+  refresh = false,
+): Promise<Record<string, unknown>> {
+  if (refresh) specCache.delete(schemaUrl);
+  const cached = specCache.get(schemaUrl);
+  if (cached) return cached;
 
   const promise = fetch(schemaUrl, { signal: AbortSignal.timeout(SCHEMA_FETCH_TIMEOUT_MS) }).then(
     async (response) => {
       if (!response.ok) throw new Error(`OpenAPI request failed: ${response.status}`);
-      const spec = asRecord(await response.json());
+      const spec = asRecord(JSON.parse(await limitedText(response, MAX_SCHEMA_BYTES)));
       if (!spec || typeof spec.openapi !== "string" || !asRecord(spec.paths)) {
         throw new Error("OpenAPI response is not a valid document");
       }
@@ -44,9 +79,10 @@ async function loadSpec(schemaUrl: string): Promise<Record<string, unknown>> {
     },
   );
 
-  specCache = { schemaUrl, promise };
+  specCache.set(schemaUrl, promise);
+  if (specCache.size > MAX_CACHED_SPECS) specCache.delete(specCache.keys().next().value!);
   void promise.catch(() => {
-    if (specCache?.promise === promise) specCache = undefined;
+    if (specCache.get(schemaUrl) === promise) specCache.delete(schemaUrl);
   });
   return promise;
 }
@@ -76,8 +112,9 @@ export async function parseResponse(response: Response, authorization: string): 
   if (response.status === 204) return null;
 
   const contentType = response.headers.get("Content-Type") ?? "";
+  const text = await limitedText(response, MAX_API_RESPONSE_BYTES);
   const result = redactCredentials(
-    contentType.includes("json") ? await response.json() : await response.text(),
+    contentType.includes("json") ? JSON.parse(text) : text,
     authorization,
   );
   if (!response.ok) {
@@ -92,44 +129,35 @@ function requestBody(options: RequestOptions): BodyInit | undefined {
   return options.rawBody ? (options.body as BodyInit) : JSON.stringify(options.body);
 }
 
-export default {
-  async fetch(request, env, ctx): Promise<Response> {
-    const url = new URL(request.url);
-    if (url.pathname === "/health") {
-      if (!env.OPENAPI_SCHEMA_URL) {
-        return Response.json({ status: "unhealthy" }, { status: 503 });
-      }
-      try {
-        await loadSpec(env.OPENAPI_SCHEMA_URL);
-        return Response.json({ status: "ok" });
-      } catch {
-        return Response.json({ status: "unhealthy" }, { status: 503 });
-      }
-    }
-
+export async function handleOpenApiMcp(
+  request: Request,
+  env: Pick<CodeModeEnv, "LOADER">,
+  ctx: ExecutionContext,
+  config: OpenApiMcpConfig,
+): Promise<Response> {
     const authorization = request.headers.get("Authorization");
     if (!isBearer(authorization)) {
       return new Response("Bearer token required", { status: 401 });
     }
-    if (!env.OPENAPI_SCHEMA_URL) {
-      return new Response("OPENAPI_SCHEMA_URL is required", { status: 503 });
+    if (!config.schemaUrl) {
+      return new Response("OpenAPI schema URL is required", { status: 503 });
     }
 
-    const spec = await loadSpec(env.OPENAPI_SCHEMA_URL);
-    const allowMutations = env.ALLOW_MUTATIONS?.toLowerCase() === "true";
+    const spec = await loadOpenApiSpec(config.schemaUrl);
+    const allowMutations = config.allowMutations === true;
     const info = spec.info as Record<string, unknown> | undefined;
 
     const server = openApiMcpServer({
       spec,
       executor: new DynamicWorkerExecutor({ loader: env.LOADER }),
-      name: env.API_NAME || (typeof info?.title === "string" ? info.title : "openapi-api"),
+      name: config.apiName || (typeof info?.title === "string" ? info.title : "openapi-api"),
       version: typeof info?.version === "string" ? info.version : "1.0.0",
       description: allowMutations
         ? "Mutating operations are enabled. Confirm intent before changing data."
         : "This server is read-only. Mutating operations are blocked by policy.",
       request: async (options) => {
         assertAllowedOperation(spec, options.method, options.path, allowMutations);
-        const baseUrl = resolveApiBaseUrl(spec, env.OPENAPI_SCHEMA_URL, env.OPENAPI_BASE_URL, options);
+        const baseUrl = resolveApiBaseUrl(spec, config.schemaUrl, config.baseUrl ?? undefined, options);
         const headers: Record<string, string> = { Authorization: authorization };
         if (options.contentType) {
           headers["Content-Type"] = options.contentType;
@@ -151,5 +179,28 @@ export default {
     });
 
     return createMcpHandler(server, { route: "/mcp" })(request, env, ctx);
+}
+
+export default {
+  async fetch(request, env, ctx): Promise<Response> {
+    const url = new URL(request.url);
+    if (url.pathname === "/health") {
+      if (!env.OPENAPI_SCHEMA_URL) {
+        return Response.json({ status: "unhealthy" }, { status: 503 });
+      }
+      try {
+        await loadOpenApiSpec(env.OPENAPI_SCHEMA_URL);
+        return Response.json({ status: "ok" });
+      } catch {
+        return Response.json({ status: "unhealthy" }, { status: 503 });
+      }
+    }
+
+    return handleOpenApiMcp(request, env, ctx, {
+      schemaUrl: env.OPENAPI_SCHEMA_URL,
+      baseUrl: env.OPENAPI_BASE_URL,
+      apiName: env.API_NAME,
+      allowMutations: env.ALLOW_MUTATIONS?.toLowerCase() === "true",
+    });
   },
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler<CodeModeEnv>;

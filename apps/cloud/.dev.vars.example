@@ -1,0 +1,24 @@
+BETTER_AUTH_SECRET=local-development-secret-at-least-32-characters
+BETTER_AUTH_URL=http://127.0.0.1:8788
+PUBLIC_APP_URL=http://localhost:3001
+LOCAL_DEV_MODE=true
+RATE_LIMITS_DISABLED=true
+# Defaults to 5,000 in production: about $8 maximum Dynamic Worker overage.
+# MAX_DYNAMIC_WORKERS_PER_MONTH=5000
+
+GITHUB_CLIENT_ID=local-unused
+GITHUB_CLIENT_SECRET=local-unused
+GOOGLE_CLIENT_ID=local-unused
+GOOGLE_CLIENT_SECRET=local-unused
+ACCESS_REQUEST_ORIGINS=http://localhost:5173
+ADMIN_LOGIN=admin
+ADMIN_PASSWORD=change-this-local-password
+
+PROJECT_SECRETS_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+
+# Optional approval emails through Resend.
+# RESEND_API_KEY=re_...
+# ACCESS_APPROVAL_EMAIL_FROM=Lemy <access@example.com>
+
+# Optional model choices shown after a user activates OpenAI or Anthropic in the dashboard.
+# LEMY_MODEL_CATALOG_JSON=[{"provider":"openai","model":"custom-model","label":"Custom model"}]

@@ -1,5 +1,6 @@
 node_modules/
 dist/
+worker-dist/
 .env
 .dev.vars
 .wrangler/
@@ -10,4 +11,3 @@ __pycache__/
 *.pyc
 coverage/
 .DS_Store
-

@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lemy-cloud-test",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-07-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lemy-cloud-test",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "LEMY_AGENT", "class_name": "LemyProjectAgent" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["LemyProjectAgent"] }],
+  "vars": {
+    "BETTER_AUTH_SECRET": "test-secret-that-is-at-least-32-characters",
+    "BETTER_AUTH_URL": "https://cloud.test",
+    "PUBLIC_APP_URL": "https://cloud.test",
+    "PROJECT_SECRETS_KEY": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+    "GOOGLE_CLIENT_ID": "test-google-id",
+    "GOOGLE_CLIENT_SECRET": "test-google-secret",
+    "GITHUB_CLIENT_ID": "test-github-id",
+    "GITHUB_CLIENT_SECRET": "test-github-secret",
+    "ACCESS_REQUEST_ORIGINS": "https://lemy.example.com",
+    "ADMIN_LOGIN": "admin",
+    "ADMIN_PASSWORD": "test-password",
+    "RATE_LIMITS_DISABLED": "true"
+  }
+}

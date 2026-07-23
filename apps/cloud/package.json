@@ -1,0 +1,46 @@
+{
+  "name": "@lemy/cloud",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && wrangler deploy --dry-run --outdir worker-dist",
+    "deploy": "vite build && wrangler d1 migrations apply lemy-cloud --remote && wrangler deploy",
+    "dev": "npm run dev:setup && concurrently -k -n api,web -c green,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "wrangler dev --port 8788",
+    "dev:setup": "wrangler d1 migrations apply lemy-cloud --local",
+    "dev:web": "vite --host 0.0.0.0 --port 3001",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "3.0.97",
+    "@ai-sdk/openai": "3.0.85",
+    "@better-auth/drizzle-adapter": "1.6.23",
+    "@cloudflare/ai-chat": "^0.9.3",
+    "@cloudflare/codemode": "0.4.3",
+    "@cloudflare/think": "^0.13.0",
+    "@modelcontextprotocol/sdk": "^1.28.1",
+    "agents": "0.17.4",
+    "ai": "6.0.233",
+    "better-auth": "1.6.23",
+    "drizzle-orm": "0.45.2",
+    "hono": "4.12.31",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "yaml": "^2.9.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "0.18.7",
+    "@cloudflare/workers-types": "5.20260722.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "latest",
+    "concurrently": "latest",
+    "typescript": "7.0.2",
+    "vite": "8.1.5",
+    "vitest": "4.1.10",
+    "wrangler": "4.113.0"
+  }
+}

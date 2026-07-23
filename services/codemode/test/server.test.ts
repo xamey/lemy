@@ -15,7 +15,7 @@ vi.mock("agents/mcp", () => ({
   createMcpHandler: createMcpHandlerMock,
 }));
 
-import worker, { parseResponse } from "../src/server.js";
+import worker, { loadOpenApiSpec, parseResponse } from "../src/server.js";
 
 const authorization = "Bearer top-secret-token";
 
@@ -48,6 +48,12 @@ describe("parseResponse", () => {
       "API request failed: 401 upstream echoed [REDACTED] and [REDACTED]",
     );
   });
+
+  it("rejects oversized API responses", async () => {
+    await expect(parseResponse(new Response("x", {
+      headers: { "content-length": "128001" },
+    }), authorization)).rejects.toThrow("too large");
+  });
 });
 
 describe("health", () => {
@@ -77,6 +83,19 @@ describe("health", () => {
     expect(second.status).toBe(200);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[1]?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it("can explicitly refresh a cached schema", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ openapi: "3.1.0", paths: { "/old": {} } }))
+      .mockResolvedValueOnce(Response.json({ openapi: "3.1.0", paths: { "/new": {} } }));
+    vi.stubGlobal("fetch", fetchMock);
+    const schemaUrl = "https://schemas.example.com/refresh-openapi.json";
+
+    await expect(loadOpenApiSpec(schemaUrl)).resolves.toHaveProperty("paths./old");
+    await expect(loadOpenApiSpec(schemaUrl)).resolves.toHaveProperty("paths./old");
+    await expect(loadOpenApiSpec(schemaUrl, true)).resolves.toHaveProperty("paths./new");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("reports unhealthy when the schema cannot be loaded", async () => {
@@ -110,6 +129,19 @@ describe("health", () => {
     const response = await worker.fetch(
       new Request("https://worker.test/health") as never,
       {} as never,
+      {} as never,
+    );
+
+    expect(response.status).toBe(503);
+  });
+
+  it("rejects oversized OpenAPI documents before caching them", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", {
+      headers: { "content-length": "1000001" },
+    })));
+    const response = await worker.fetch(
+      new Request("https://worker.test/health") as never,
+      { OPENAPI_SCHEMA_URL: "https://schemas.example.com/oversized-openapi.json" } as never,
       {} as never,
     );
 

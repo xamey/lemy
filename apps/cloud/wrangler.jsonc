@@ -1,0 +1,51 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lemy-cloud",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-07-21",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "limits": {
+    "cpu_ms": 100,
+    "subrequests": 150
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/control/*", "/external-mcp/*", "/runtime/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lemy-cloud",
+      "database_id": "e289de60-a47a-4248-89f4-c4ca8da62ebe",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "worker_loaders": [{ "binding": "LOADER" }],
+  "triggers": {
+    "crons": ["17 3 * * *"]
+  },
+  "ratelimits": [
+    { "name": "AUTH_RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } },
+    { "name": "ACCESS_REQUEST_RATE_LIMITER", "namespace_id": "1007", "simple": { "limit": 3, "period": 60 } },
+    { "name": "CONTROL_RATE_LIMITER", "namespace_id": "1002", "simple": { "limit": 120, "period": 60 } },
+    { "name": "MUTATION_RATE_LIMITER", "namespace_id": "1003", "simple": { "limit": 20, "period": 60 } },
+    { "name": "LIFECYCLE_RATE_LIMITER", "namespace_id": "1006", "simple": { "limit": 3, "period": 60 } },
+    { "name": "RUNTIME_PROJECT_RATE_LIMITER", "namespace_id": "1004", "simple": { "limit": 120, "period": 60 } },
+    { "name": "RUNTIME_PRINCIPAL_RATE_LIMITER", "namespace_id": "1005", "simple": { "limit": 30, "period": 60 } }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "LEMY_AGENT", "class_name": "LemyProjectAgent" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["LemyProjectContainer"] },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["LemyProjectAgent"],
+      "deleted_classes": ["LemyProjectContainer"]
+    }
+  ]
+}

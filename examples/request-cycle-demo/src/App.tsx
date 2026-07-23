@@ -44,9 +44,9 @@ export function App() {
 
   const executionSteps = run
     ? [
-        ["Auth", "Bearer attached"],
-        ["Agent", "Calls MCP execute"],
-        ["MCP", run.prompt.request],
+        ["Identity", "Bearer verified"],
+        ["Think", "Thread restored"],
+        ["Connector", run.prompt.request],
         ["API", "200 OK"],
       ]
     : [];
@@ -60,9 +60,8 @@ export function App() {
       <nav>
         <div className="brand">
           <img className="brand-logo" src={lemyLogo} alt="" />
-          <strong>Lemy</strong>
         </div>
-        <span className="status"><i /> Open source · self-hosted</span>
+        <span className="status"><i /> Source available · self-hosted</span>
       </nav>
 
       <section className="hero">
@@ -74,7 +73,7 @@ export function App() {
           <div className="provider-row" aria-label="Supported model providers">
             <span>OpenAI</span>
             <span>Anthropic</span>
-            <span>Compatible endpoints</span>
+            <span>OpenAI or Anthropic</span>
           </div>
         </div>
 

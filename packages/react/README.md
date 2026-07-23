@@ -1,101 +1,86 @@
 # @xameyz/lemy-react
 
-React sidebar for Lemy, an OpenAPI agent harness.
-
-Lemy lets users talk to your API in natural language while keeping your existing API, OpenAPI schema, and bearer authentication flow.
+Drop-in React chat for a Lemy project running on Cloudflare Think.
 
 ## Install
 
 ```bash
-npm install @xameyz/lemy-react @copilotkit/react-core
+npm install @xameyz/lemy-react @cloudflare/think agents ai
 ```
 
 `react` and `react-dom` are peer dependencies.
 
-## Usage
+## Use the sidebar
 
 ```tsx
 import { OpenApiAgentSidebar } from "@xameyz/lemy-react";
 import "@xameyz/lemy-react/styles.css";
 
-export function ApiAssistant({ bearer }: { bearer: string }) {
+export function Assistant({ bearer }: { bearer: string }) {
   return (
     <OpenApiAgentSidebar
       bearerToken={bearer}
-      runtimeUrl="https://lemy.example.com/api/copilotkit"
+      runtimeUrl="https://lemy.example.com/runtime/YOUR_PROJECT_ID"
     />
   );
 }
 ```
 
-`bearerToken` should come from your authenticated app session. Lemy forwards it to the runtime, validates it with your configured validation URL, and uses the same authorization when the agent calls your OpenAPI API.
+The browser sends the bearer once to the project's HTTPS session endpoint. Lemy validates it, returns a short-lived opaque credential, and uses that credential for the Think WebSocket. The customer bearer is never placed in the WebSocket URL.
 
 ## Threads
 
-The sidebar includes a **New conversation** button by default. It starts a fresh thread so the next conversation has clean agent context.
-
-If your app wants to own thread state:
+The included **New chat** button creates a fresh Durable Object conversation. Control the thread from your app when you need routing or persistence:
 
 ```tsx
-import { useState } from "react";
 import { createLemyThreadId, OpenApiAgentSidebar } from "@xameyz/lemy-react";
-import "@xameyz/lemy-react/styles.css";
+import { useState } from "react";
 
-export function ApiAssistant({ bearer }: { bearer: string }) {
-  const [threadId, setThreadId] = useState(createLemyThreadId);
+const [threadId, setThreadId] = useState(createLemyThreadId);
 
-  return (
-    <OpenApiAgentSidebar
-      bearerToken={bearer}
-      runtimeUrl="https://lemy.example.com/api/copilotkit"
-      threadId={threadId}
-      onThreadIdChange={setThreadId}
-    />
-  );
-}
+<OpenApiAgentSidebar
+  bearerToken={bearer}
+  runtimeUrl={project.runtimeUrl}
+  threadId={threadId}
+  onThreadIdChange={setThreadId}
+/>
 ```
 
-## API
+## Human approval
 
-### `OpenApiAgentSidebar`
+`toolApprovalMode="ask"` is the default. Mutating OpenAPI operations and external MCP tools pause durably before execution. The sidebar supports **Approve once**, **Always allow**, and **Reject**.
 
-Ready-made CopilotKit sidebar.
+```tsx
+const [approvedTools, setApprovedTools] = useState<string[]>([]);
 
-Required props:
+<OpenApiAgentSidebar
+  approvedTools={approvedTools}
+  bearerToken={bearer}
+  onApprovedToolsChange={setApprovedTools}
+  runtimeUrl={project.runtimeUrl}
+  toolApprovalMode="ask"
+/>
+```
 
-- `bearerToken`: current user bearer token.
-- `runtimeUrl`: Lemy runtime CopilotKit endpoint.
+Persist `approvedTools` per authenticated user and Lemy project. Use `toolApprovalMode="auto"` only when every configured tool may run without confirmation.
 
-Useful optional props:
+## Custom UI
 
-- `agentId`: Copilot/LangGraph agent id. Defaults to `default`.
-- `threadId`: controlled conversation thread id.
-- `onThreadIdChange`: called when the user starts a new conversation.
-- `showNewConversationButton`: defaults to `true`.
-- `newConversationLabel`: defaults to `New conversation`.
+`OpenApiAgentProvider` establishes the authenticated Think connection. Build any UI on top of `useLemyChat()`:
 
-Other CopilotKit sidebar props are forwarded.
+```tsx
+function MyChat() {
+  const { chat, pendingActions, approveExecution, rejectExecution } = useLemyChat();
+  // Render chat.messages and call chat.sendMessage({ text }).
+}
 
-### `OpenApiAgentProvider`
+<OpenApiAgentProvider
+  bearerToken={bearer}
+  runtimeUrl={project.runtimeUrl}
+  threadId={threadId}
+>
+  <MyChat />
+</OpenApiAgentProvider>
+```
 
-Use this if you want to provide your own CopilotKit UI.
-
-### `createLemyThreadId`
-
-Creates a client-side thread id suitable for Lemy conversations.
-
-### `toAuthorizationHeader`
-
-Normalizes a raw token into a `Bearer ...` authorization header value.
-
-## Runtime requirements
-
-This package expects a Lemy runtime deployment configured with:
-
-- `OPENAPI_SCHEMA_URL`
-- `BEARER_VALIDATION_URL`
-- `CORS_ORIGINS`
-- an LLM provider/API key
-- PostgreSQL checkpointer config
-
-See the Lemy repository README for the Docker Compose runtime.
+`useLemyChat()` exposes the native Think chat, connection, durable pending actions, and approval methods. No CopilotKit, LangGraph, PostgreSQL, or AG-UI bridge is involved.

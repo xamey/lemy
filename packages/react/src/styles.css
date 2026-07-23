@@ -1,119 +1,188 @@
-@import "@copilotkit/react-core/v2/styles.css";
-
-[data-copilotkit] {
-  --background: #ffffff;
-  --foreground: #0b0f0d;
-  --card: #ffffff;
-  --card-foreground: #0b0f0d;
-  --popover: #ffffff;
-  --popover-foreground: #0b0f0d;
-  --primary: #4edf95;
-  --primary-foreground: #07110c;
-  --secondary: #f5f8f6;
-  --secondary-foreground: #0b0f0d;
-  --muted: #f5f8f6;
-  --muted-foreground: #68716c;
-  --accent: #edfff6;
-  --accent-foreground: #103b25;
-  --border: #e2e8e4;
-  --input: #e2e8e4;
-  --ring: #4edf95;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0b0f0d;
-  --sidebar-primary: #4edf95;
-  --sidebar-primary-foreground: #07110c;
-  --sidebar-accent: #edfff6;
-  --sidebar-accent-foreground: #103b25;
-  --sidebar-border: #e2e8e4;
-  --sidebar-ring: #4edf95;
-}
-
-[data-copilot-sidebar] {
-  padding: 0;
-  border-left: 1px solid #e2e8e4;
-  border-radius: 0;
-  background: #ffffff;
-  box-shadow: -12px 0 48px rgb(18 35 25 / 7%);
+.lemySidebar {
+  --lemy-green: #4edf95;
+  --lemy-ink: #111713;
+  --lemy-muted: #68716c;
+  --lemy-line: #e3e9e5;
+  width: min(390px, 100%);
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid var(--lemy-line);
+  border-radius: 24px;
+  color: var(--lemy-ink);
+  background: #fff;
+  box-shadow: 0 24px 80px rgb(20 40 28 / 12%);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
-[data-copilot-sidebar] .copilotKitHeader {
+.lemyPanel {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  min-height: inherit;
+  background: linear-gradient(180deg, #fff 0, #fbfdfc 100%);
+}
+
+.lemyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   min-height: 64px;
-  margin: 0;
-  padding: 0 20px;
-  border-color: #e8ece9;
-  background: rgb(255 255 255 / 92%);
+  padding: 0 18px;
+  border-bottom: 1px solid var(--lemy-line);
 }
 
-[data-copilot-sidebar] .copilotKitHeader [class*="cpk:text-base"] {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.lemyHeader div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
-[data-copilot-sidebar] .copilotKitChat {
-  background: #fbfdfc;
+.lemyHeader div i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lemy-green);
+  box-shadow: 0 0 0 5px rgb(78 223 149 / 18%);
 }
 
-[data-copilot-sidebar] .copilotKitChat h1 {
-  max-width: 300px;
-  margin: 0;
-  color: #18201b;
-  font-size: 28px;
-  font-weight: 650;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
-}
+.lemyHeader strong { font-size: 14px; }
 
-[data-copilot-sidebar] .copilotKitInput {
-  border: 1px solid #dce4df;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgb(18 35 25 / 7%);
-}
-
-[data-copilot-sidebar] .copilotKitInput button[class*="cpk:bg-black"] {
-  color: #07110c;
-  background: #4edf95;
-}
-
-[data-copilot-sidebar] .copilotKitInput button[class*="cpk:bg-black"]:disabled {
-  color: #668071;
-  background: #e7f8ef;
-}
-
-.lemyNewConversationButton {
-  min-height: 34px;
-  padding: 0 12px;
-  border: 1px solid #dce4df;
+.lemyHeader button,
+.lemyApproval button {
+  padding: 8px 11px;
+  border: 1px solid #cfd9d3;
   border-radius: 999px;
-  color: #103b25;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgb(18 35 25 / 9%);
-  font: 600 12px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #173724;
+  background: #fff;
+  font: 650 12px/1 inherit;
   cursor: pointer;
 }
 
-.lemyNewConversationButton:hover {
-  border-color: #4edf95;
+.lemyHeader button:hover,
+.lemyApproval button:hover { border-color: var(--lemy-green); background: #edfff6; }
+
+.lemyMessages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 360px;
+  max-height: 560px;
+  padding: 20px 18px;
+  overflow-y: auto;
+}
+
+.lemyWelcome {
+  display: grid;
+  place-items: center;
+  gap: 7px;
+  margin: auto;
+  padding: 32px;
+  text-align: center;
+}
+
+.lemyWelcome i { color: #20a966; font-size: 24px; font-style: normal; }
+.lemyWelcome strong { font-size: 20px; letter-spacing: -.035em; }
+.lemyWelcome span { color: var(--lemy-muted); font-size: 13px; }
+
+.lemyMessage {
+  max-width: 86%;
+  padding: 11px 13px;
+  border: 1px solid var(--lemy-line);
+  border-radius: 16px 16px 16px 5px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.lemyMessage--user {
+  align-self: flex-end;
+  border-color: #b8eccf;
+  border-radius: 16px 16px 5px;
   background: #edfff6;
 }
 
-.lemyNewConversationButton:focus-visible {
-  outline: 2px solid #4edf95;
-  outline-offset: 2px;
-}
-
-.lemySidebarTitle,
-.lemySidebarActions {
-  display: flex;
-  align-items: center;
+.lemyApproval {
+  display: grid;
   gap: 10px;
+  padding: 14px;
+  border: 1px solid #b8eccf;
+  border-radius: 16px;
+  background: #f7fffa;
 }
 
-.lemySidebarTitle {
+.lemyApproval > span {
+  color: #257149;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.lemyApproval strong { font-size: 13px; }
+.lemyApproval pre {
+  max-height: 150px;
+  margin: 7px 0 0;
+  padding: 10px;
+  overflow: auto;
+  border-radius: 10px;
+  background: #eef5f1;
+  font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+}
+
+.lemyApproval footer { display: flex; flex-wrap: wrap; gap: 7px; }
+.lemyApproval footer button:first-child { border-color: var(--lemy-green); background: var(--lemy-green); }
+.lemyApproval footer .lemyReject { color: #8a3636; }
+.lemyApproval button:disabled { cursor: wait; opacity: .55; }
+
+.lemyComposer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0 14px;
+  padding: 9px;
+  border: 1px solid #d7e0da;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(20 40 28 / 8%);
+}
+
+.lemyComposer:focus-within { border-color: var(--lemy-green); box-shadow: 0 0 0 3px rgb(78 223 149 / 15%); }
+.lemyComposer textarea {
+  flex: 1;
   min-width: 0;
+  padding: 5px;
+  resize: none;
+  border: 0;
+  outline: 0;
+  color: var(--lemy-ink);
+  background: transparent;
+  font: 14px/1.4 inherit;
 }
 
-.lemySidebarActions {
-  margin-left: auto;
+.lemyComposer button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 11px;
+  color: #07110c;
+  background: var(--lemy-green);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.lemyComposer button:disabled { background: #e8f1ec; color: #829188; cursor: default; }
+.lemyDisclaimer { margin: 9px 14px 13px; color: #87928b; font-size: 10px; text-align: center; }
+.lemyError { padding: 10px; border-radius: 10px; color: #8a3636; background: #fff1f1; font-size: 12px; }
+.lemyLoading { padding: 24px; color: var(--lemy-muted, #68716c); font: 13px Inter, system-ui, sans-serif; }
+.lemyThinking { display: flex; gap: 4px; padding: 8px; }
+.lemyThinking i { width: 6px; height: 6px; border-radius: 50%; background: #66af88; animation: lemyPulse 1s infinite alternate; }
+.lemyThinking i:nth-child(2) { animation-delay: .15s; }
+.lemyThinking i:nth-child(3) { animation-delay: .3s; }
+
+@keyframes lemyPulse { to { opacity: .25; transform: translateY(-2px); } }
+
+@media (max-width: 480px) {
+  .lemySidebar { width: 100%; min-height: 100dvh; border: 0; border-radius: 0; }
+  .lemyMessages { max-height: none; }
 }

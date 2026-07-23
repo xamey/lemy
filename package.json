@@ -1,11 +1,11 @@
 {
   "name": "lemy",
   "version": "0.1.0",
-  "license": "Apache-2.0",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "workspaces": [
+    "apps/cloud",
     "services/codemode",
-    "services/runtime",
     "packages/react",
     "examples/request-cycle-demo",
     "landing"
@@ -17,16 +17,16 @@
     "check": "npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
+    "@hono/node-server": "2.0.11",
     "node-addon-api": "^8.5.0",
-    "node-gyp": "^11.5.0"
+    "node-gyp": "^11.5.0",
+    "shell-quote": "1.10.0"
   },
   "engines": {
     "node": ">=22"
   },
   "overrides": {
-    "uuid": "11.1.1",
-    "@copilotkit/runtime@1.63.1": {
-      "uuid": "11.1.1"
-    }
+    "@hono/node-server": "2.0.11",
+    "shell-quote": "1.10.0"
   }
 }

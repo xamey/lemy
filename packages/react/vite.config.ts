@@ -12,7 +12,14 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "@copilotkit/react-core/v2"],
+      external: [
+        "@cloudflare/think/react",
+        "agents/react",
+        "ai",
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+      ],
     },
   },
 });
