@@ -75,7 +75,13 @@ export function App() {
           </div>
           {error && <p className="error">{error}</p>}
           <footer>
-            <div><strong>Lemy project configuration</strong><button onClick={() => void reset()}>Reset demo</button></div>
+            <div>
+              <strong>Lemy project configuration</strong>
+              <span>
+                {runtimeUrl && <button onClick={() => setRuntimeUrl("")}>Change runtime</button>}
+                <button onClick={() => void reset()}>Reset demo</button>
+              </span>
+            </div>
             <span>Project name: <code>Lemy playground</code></span>
             <span>OpenAPI schema: <a href="/openapi.json">https://play.lemy.online/openapi.json</a></span>
             <span>API base URL: <code>https://play.lemy.online</code></span>
@@ -87,13 +93,10 @@ export function App() {
         </section>
         <aside className="assistant">
           {runtimeUrl ? (
-            <>
-              <button className="change-runtime" onClick={() => setRuntimeUrl("")}>Change runtime</button>
-              <OpenApiAgentSidebar
-                bearerToken={bearerToken}
-                runtimeUrl={runtimeUrl}
-              />
-            </>
+            <OpenApiAgentSidebar
+              bearerToken={bearerToken}
+              runtimeUrl={runtimeUrl}
+            />
           ) : (
             <form className="setup" onSubmit={connect}>
               <span>Connect the live demo</span>

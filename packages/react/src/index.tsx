@@ -27,7 +27,8 @@ function messageText(message: { parts?: Array<Record<string, unknown>> }) {
   return (message.parts ?? [])
     .filter((part) => part.type === "text" && typeof part.text === "string")
     .map((part) => part.text as string)
-    .join("");
+    .join("")
+    .replaceAll("**", "");
 }
 
 function ApprovalCard({ executionId, actions }: { executionId: string; actions: PendingAction[] }) {

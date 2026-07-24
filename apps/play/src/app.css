@@ -11,7 +11,7 @@ nav a { margin-left: auto; color: #23774d; font-size: 10px; font-weight: 800; te
 .tasks, .assistant { min-width: 0; border: 1px solid #dce4de; border-radius: 18px; background: #fff; box-shadow: 0 24px 70px rgb(21 52 33 / 6%); }
 .tasks { padding: 30px; }
 .tasks > header { display: flex; align-items: end; justify-content: space-between; }
-.tasks header span, .assistant form > span { color: #258354; font: 800 8px/1 ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.tasks header span, .assistant .setup > span { color: #258354; font: 800 8px/1 ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
 h1 { margin: 12px 0 0; font-size: 58px; line-height: .9; letter-spacing: -.07em; }
 .tasks header b { padding: 9px 11px; border-radius: 8px; color: #17633d; background: #ddfaea; font-size: 9px; }
 .task-list { margin-top: 35px; border-top: 1px solid #e2e8e4; }
@@ -23,12 +23,13 @@ h1 { margin: 12px 0 0; font-size: 58px; line-height: .9; letter-spacing: -.07em;
 .task-list small { color: #929b95; font: 700 7px/1 ui-monospace, monospace; text-transform: uppercase; }
 .tasks > footer { margin-top: 32px; padding: 18px; display: grid; gap: 9px; border-radius: 12px; color: #637068; background: #f4f7f5; font-size: 9px; }
 .tasks footer > div { display: flex; align-items: center; justify-content: space-between; }
+.tasks footer > div > span { display: flex; gap: 12px; }
 .tasks footer strong { color: #243128; font-size: 10px; }
 .tasks footer button { padding: 0; border: 0; color: #24764d; background: transparent; font-size: 8px; font-weight: 800; }
 code { color: #17633d; font-family: ui-monospace, monospace; }
 .tasks footer a { color: #17633d; }
 .assistant { position: relative; min-height: 690px; overflow: hidden; }
-.assistant form { height: 100%; min-height: 690px; padding: 38px; display: flex; flex-direction: column; justify-content: center; }
+.assistant .setup { height: 100%; min-height: 690px; padding: 38px; display: flex; flex-direction: column; justify-content: center; }
 .assistant h2 { margin: 15px 0 11px; font-size: 35px; line-height: 1; letter-spacing: -.06em; }
 .assistant p { margin: 0 0 18px; color: #748078; font-size: 10px; line-height: 1.6; }
 .assistant p a { color: #23774d; font-weight: 800; }
@@ -41,10 +42,11 @@ code { color: #17633d; font-family: ui-monospace, monospace; }
 .runtime-connect { margin-top: 20px; padding-top: 18px; display: flex; flex-direction: column; border-top: 1px solid #e1e8e3; }
 .runtime-connect > strong { margin-bottom: 9px; font-size: 10px; }
 .assistant input { height: 46px; padding: 0 12px; border: 1px solid #ccd7d0; border-radius: 9px; outline: none; }
-.assistant form button { height: 46px; margin-top: 9px; border: 1px solid #2cc978; border-radius: 9px; color: #123820; background: var(--green); font-size: 10px; font-weight: 850; }
-.assistant form small { margin-top: 16px; color: #8b958f; font-size: 8px; line-height: 1.6; }
-.assistant .lemySidebar { position: absolute; inset: 0; width: auto; height: 100%; border: 0; box-shadow: none; }
-.change-runtime { position: absolute; z-index: 4; top: 17px; right: 18px; border: 0; color: #6d7971; background: transparent; font-size: 8px; font-weight: 800; }
+.assistant .setup button { height: 46px; margin-top: 9px; border: 1px solid #2cc978; border-radius: 9px; color: #123820; background: var(--green); font-size: 10px; font-weight: 850; }
+.assistant .setup small { margin-top: 16px; color: #8b958f; font-size: 8px; line-height: 1.6; }
+.assistant .lemySidebar { position: absolute; inset: 0; width: auto; height: 100%; min-height: 0; border: 0; border-radius: 18px; box-shadow: none; }
+.assistant .lemyPanel { height: 100%; min-height: 0; }
+.assistant .lemyMessages { min-height: 0; max-height: none; }
 .error { color: #a94343; font-size: 10px; }
 @media (max-width: 850px) { .layout { grid-template-columns: 1fr; }.assistant { min-height: 690px; } }
-@media (max-width: 560px) { nav { padding: 0 16px; }.layout { width: calc(100% - 24px); padding: 18px 0; }.tasks { padding: 22px 18px; }h1 { font-size: 48px; }.assistant form { padding: 24px; }.setup dl > div { grid-template-columns: 105px minmax(0, 1fr); } }
+@media (max-width: 560px) { nav { padding: 0 16px; }.layout { width: calc(100% - 24px); padding: 18px 0; }.tasks { padding: 22px 18px; }h1 { font-size: 48px; }.assistant .setup { padding: 24px; }.setup dl > div { grid-template-columns: 105px minmax(0, 1fr); } }
