@@ -201,18 +201,18 @@ function playgroundInput(value: unknown) {
     : {};
   const bearer = typeof candidate.bearer === "string" ? candidate.bearer.trim() : "";
   const prompt = typeof candidate.prompt === "string" ? candidate.prompt.trim() : "";
-  const toolApprovalMode = candidate.toolApprovalMode ?? "ask";
+  const toolApprovalMode = candidate.toolApprovalMode ?? "mutations";
   if (!bearer || bearer.length > 8_192) throw new Error("Bearer token is required");
   if (!prompt || prompt.length > 4_000) {
     throw new Error("Prompt must contain 1 to 4000 characters");
   }
-  if (toolApprovalMode !== "auto" && toolApprovalMode !== "ask") {
-    throw new Error("Tool approval mode must be auto or ask");
+  if (!["always", "auto", "ask", "mutations"].includes(toolApprovalMode as string)) {
+    throw new Error("Tool approval mode is invalid");
   }
   return {
     authorization: /^Bearer\s+/i.test(bearer) ? bearer : `Bearer ${bearer}`,
     prompt,
-    toolApprovalMode: toolApprovalMode as "auto" | "ask",
+    toolApprovalMode: toolApprovalMode as "always" | "auto" | "ask" | "mutations",
   };
 }
 
@@ -1016,7 +1016,7 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
       };
       const threadId = value.threadId === undefined ? crypto.randomUUID() : value.threadId;
       const approvedTools = value.approvedTools === undefined ? [] : value.approvedTools;
-      const toolApprovalMode = value.toolApprovalMode === undefined ? "ask" : value.toolApprovalMode;
+      const toolApprovalMode = value.toolApprovalMode === undefined ? "mutations" : value.toolApprovalMode;
       if (typeof threadId !== "string" || !Array.isArray(approvedTools)) {
         throw new Error("Runtime session input is invalid");
       }
@@ -1028,7 +1028,7 @@ export function createCloudApp(overrides: Partial<Services> = {}) {
         principal,
         projectId: project.id,
         threadId,
-        toolApprovalMode: toolApprovalMode as "auto" | "ask",
+        toolApprovalMode: toolApprovalMode as "always" | "auto" | "ask" | "mutations",
       }, c.env.PROJECT_SECRETS_KEY);
       await registerProjectThread(
         c.env.DB,

@@ -6,7 +6,9 @@ export {
 } from "@xameyz/lemy-react/headless";
 export {
   createRuntimeSession,
+  createLemyThreadId,
   normalizeApprovedTools,
+  normalizeToolApprovalMode,
   parseRuntimeUrl,
   runtimeAgentPath,
   toAuthorizationHeader,

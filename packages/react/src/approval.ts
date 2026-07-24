@@ -1,4 +1,5 @@
-export type ToolApprovalMode = "auto" | "ask";
+export type ToolApprovalMode = "always" | "auto" | "ask" | "mutations";
+export type NormalizedToolApprovalMode = Exclude<ToolApprovalMode, "ask">;
 
 const TOOL_NAME = /^[A-Za-z0-9_.:-]{1,128}$/;
 
@@ -8,4 +9,10 @@ export function normalizeApprovedTools(approvedTools: readonly string[] = []): s
     throw new Error("approvedTools contains an invalid tool name");
   }
   return normalized;
+}
+
+export function normalizeToolApprovalMode(
+  mode: ToolApprovalMode = "mutations",
+): NormalizedToolApprovalMode {
+  return mode === "ask" ? "mutations" : mode;
 }

@@ -74,12 +74,13 @@ export function Assistant({ bearer }: { bearer: string }) {
 
 The bearer is sent only to `POST /runtime/:projectId/session`. Lemy validates it, encrypts it into a short-lived opaque session token, and connects the browser to the project Think agent. The same bearer is decrypted only when the agent calls the customer's OpenAPI API.
 
-`toolApprovalMode="ask"` is the default. Mutating API operations and external MCP tools pause durably for **Approve once**, **Always allow**, or **Reject**. `toolApprovalMode="auto"` skips those prompts. Persist remembered tools per user and project.
+`toolApprovalMode="mutations"` is the default. Mutating API operations and external MCP tools pause durably for **Approve once**, **Always allow**, or **Reject**. Use `"auto"` to never ask or `"always"` to approve every tool call individually. Persist remembered tools per user and project.
 
 Use `OpenApiAgentProvider` and `useLemyChat()` for a custom interface. The client speaks the native Cloudflare Agents/Think protocol; it does not advertise generic AG-UI compatibility.
 
-React Native apps can use the headless `@xameyz/lemy-react-native` package with
-the same runtime URL, bearer exchange, threads, and approval API.
+React and React Native clients support MCP-backed calls, HITL policies, durable
+threads, and stopping active responses. React Native apps use the headless
+`@xameyz/lemy-react-native` package with the same runtime URL and bearer.
 
 ## Bearer validation contract
 

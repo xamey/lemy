@@ -151,7 +151,7 @@ export function OpenApiAgentProvider({
   onApprovedToolsChange,
   runtimeUrl,
   threadId,
-  toolApprovalMode = "ask",
+  toolApprovalMode = "mutations",
 }: OpenApiAgentProviderProps) {
   const [activeApprovedTools, rememberTools] = useApprovedTools(
     `${runtimeUrl}\n${bearerToken}`,

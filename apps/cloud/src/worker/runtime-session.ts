@@ -1,6 +1,6 @@
 import { decryptSecret, encryptSecret } from "./secrets";
 
-export type ToolApprovalMode = "auto" | "ask";
+export type ToolApprovalMode = "always" | "auto" | "ask" | "mutations";
 
 export interface RuntimeSessionClaims {
   approvedTools: string[];
@@ -54,7 +54,7 @@ function validateClaims(
   if (requireFutureExpiry && claims.expiresAt <= nowSeconds) {
     throw new Error("Runtime session expired");
   }
-  if (claims.toolApprovalMode !== "auto" && claims.toolApprovalMode !== "ask") {
+  if (!["always", "auto", "ask", "mutations"].includes(claims.toolApprovalMode)) {
     throw new Error("Runtime session is invalid");
   }
   if (

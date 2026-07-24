@@ -1,4 +1,8 @@
-import { normalizeApprovedTools, type ToolApprovalMode } from "./approval.js";
+import {
+  normalizeApprovedTools,
+  normalizeToolApprovalMode,
+  type ToolApprovalMode,
+} from "./approval.js";
 import { toAuthorizationHeader } from "./auth.js";
 
 export interface RuntimeSession {
@@ -19,6 +23,13 @@ export interface RuntimeSessionInput {
 
 function isLocalhost(hostname: string) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
+}
+
+export function createLemyThreadId(): string {
+  if (typeof crypto === "undefined" || typeof crypto.randomUUID !== "function") {
+    throw new Error("createLemyThreadId requires crypto.randomUUID");
+  }
+  return crypto.randomUUID();
 }
 
 export function parseRuntimeUrl(value: string): URL {
@@ -58,7 +69,7 @@ export async function createRuntimeSession(
     body: JSON.stringify({
       approvedTools: normalizeApprovedTools(input.approvedTools),
       threadId: input.threadId,
-      toolApprovalMode: input.toolApprovalMode ?? "ask",
+      toolApprovalMode: normalizeToolApprovalMode(input.toolApprovalMode),
     }),
   });
   const value = await response.json().catch(() => null) as Partial<RuntimeSession> & { error?: unknown } | null;

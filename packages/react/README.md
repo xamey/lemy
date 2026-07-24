@@ -50,7 +50,13 @@ const [threadId, setThreadId] = useState(createLemyThreadId);
 
 ## Human approval
 
-`toolApprovalMode="ask"` is the default. Mutating OpenAPI operations and external MCP tools pause durably before execution. The sidebar supports **Approve once**, **Always allow**, and **Reject**.
+`toolApprovalMode="mutations"` is the default. The sidebar supports **Approve once**, **Always allow**, and **Reject**.
+
+- `"auto"` — never ask.
+- `"mutations"` — ask for mutating OpenAPI operations and external MCP tools.
+- `"always"` — ask before every tool call and ignore remembered approvals.
+
+External MCP tools are treated as mutations because MCP servers do not always provide trustworthy read-only metadata. The legacy `"ask"` value remains an alias for `"mutations"`.
 
 ```tsx
 const [approvedTools, setApprovedTools] = useState<string[]>([]);
@@ -60,11 +66,11 @@ const [approvedTools, setApprovedTools] = useState<string[]>([]);
   bearerToken={bearer}
   onApprovedToolsChange={setApprovedTools}
   runtimeUrl={project.runtimeUrl}
-  toolApprovalMode="ask"
+  toolApprovalMode="mutations"
 />
 ```
 
-Persist `approvedTools` per authenticated user and Lemy project. Use `toolApprovalMode="auto"` only when every configured tool may run without confirmation.
+Persist `approvedTools` per authenticated user and Lemy project. Use `toolApprovalMode="auto"` only when every configured OpenAPI and MCP tool may run without confirmation.
 
 ## Custom UI
 
@@ -73,7 +79,7 @@ Persist `approvedTools` per authenticated user and Lemy project. Use `toolApprov
 ```tsx
 function MyChat() {
   const { chat, pendingActions, approveExecution, rejectExecution } = useLemyChat();
-  // Render chat.messages and call chat.sendMessage({ text }).
+  // chat.sendMessage({ text }), chat.stop(), and approval controls are available.
 }
 
 <OpenApiAgentProvider
@@ -85,4 +91,4 @@ function MyChat() {
 </OpenApiAgentProvider>
 ```
 
-`useLemyChat()` exposes the native Think chat, connection, durable pending actions, and approval methods. No CopilotKit, LangGraph, PostgreSQL, or AG-UI bridge is involved.
+`useLemyChat()` exposes MCP-backed tool calls, the native Think chat, stop, durable pending actions, and approval methods. No CopilotKit, LangGraph, PostgreSQL, or AG-UI bridge is involved.

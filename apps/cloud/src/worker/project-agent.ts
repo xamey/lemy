@@ -55,7 +55,18 @@ import { openRuntimeSession, type RuntimeSessionClaims } from "./runtime-session
 interface RuntimeConnectionState {
   approvedTools: string[];
   token: string;
-  toolApprovalMode: "auto" | "ask";
+  toolApprovalMode: "always" | "auto" | "ask" | "mutations";
+}
+
+export function requiresToolApproval(
+  approval: Pick<RuntimeConnectionState, "approvedTools" | "toolApprovalMode">,
+  name: string,
+  mutation: boolean,
+): boolean {
+  return approval.toolApprovalMode === "always"
+    || (approval.toolApprovalMode !== "auto"
+      && mutation
+      && !approval.approvedTools.includes(name));
 }
 
 function projectIdFromAgentName(name: string): string {
@@ -75,7 +86,8 @@ function currentConnectionState(fallback?: RuntimeConnectionState): RuntimeConne
   if (!state || typeof state !== "object" || Array.isArray(state)) return fallback ?? null;
   const value = state as Partial<RuntimeConnectionState>;
   return typeof value.token === "string"
-      && (value.toolApprovalMode === "auto" || value.toolApprovalMode === "ask")
+      && typeof value.toolApprovalMode === "string"
+      && ["always", "auto", "ask", "mutations"].includes(value.toolApprovalMode)
       && Array.isArray(value.approvedTools)
     ? value as RuntimeConnectionState
     : null;
@@ -188,10 +200,11 @@ class ProjectOpenApiConnector extends OpenApiConnector<Env> {
 
   protected tool(name: string, tool: ConnectorTool): ConnectorTool {
     const approvalName = `${this.name()}.${name}`;
-    const needsApproval = this.project.allowMutations
-      && (name === "request" || this.mutations.has(name))
-      && this.approval.toolApprovalMode === "ask"
-      && !this.approval.approvedTools.includes(approvalName);
+    const needsApproval = requiresToolApproval(
+      this.approval,
+      approvalName,
+      this.project.allowMutations && (name === "request" || this.mutations.has(name)),
+    );
     return needsApproval ? { ...tool, requiresApproval: true } : tool;
   }
 
@@ -268,8 +281,7 @@ class ProjectMcpConnector extends McpConnector<Env> {
 
   protected tool(name: string, tool: ConnectorTool): ConnectorTool {
     const approvalName = `${this.name()}.${name}`;
-    return this.approval.toolApprovalMode === "ask"
-        && !this.approval.approvedTools.includes(approvalName)
+    return requiresToolApproval(this.approval, approvalName, true)
       ? { ...tool, requiresApproval: true }
       : tool;
   }

@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { createRuntimeSession, parseRuntimeUrl, runtimeAgentPath } from "../src/runtime.js";
+import {
+  createLemyThreadId,
+  createRuntimeSession,
+  parseRuntimeUrl,
+  runtimeAgentPath,
+} from "../src/runtime.js";
 
 describe("Lemy runtime sessions", () => {
   it("accepts HTTPS and loopback runtime URLs", () => {
@@ -10,6 +15,7 @@ describe("Lemy runtime sessions", () => {
   });
 
   it("builds the deterministic Think agent path", () => {
+    expect(createLemyThreadId()).toMatch(/^[0-9a-f-]{36}$/);
     expect(runtimeAgentPath(
       "https://lemy.example.com/runtime/project",
       "94e3456c-25d8-4e56-954d-e4a1dc00e6d5",
@@ -21,6 +27,7 @@ describe("Lemy runtime sessions", () => {
     const fetchFn = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
       expect(String(url)).toBe("https://lemy.example.com/runtime/project/session");
       expect(new Headers(init?.headers).get("authorization")).toBe("Bearer customer-secret");
+      expect(JSON.parse(String(init?.body))).toMatchObject({ toolApprovalMode: "mutations" });
       return Response.json({
         expiresAt: 2_000_000_000,
         protocol: "cloudflare-think",

@@ -10,6 +10,7 @@ import {
   type PendingAction,
   useLemyChat,
 } from "./headless.js";
+import { createLemyThreadId } from "./runtime.js";
 import "./styles.css";
 
 export * from "./core.js";
@@ -69,6 +70,7 @@ function ChatPanel({ labels, onNewConversation }: {
 }) {
   const { chat, pendingActions } = useLemyChat();
   const [input, setInput] = useState("");
+  const busy = chat.isStreaming || chat.isRecovering;
   const pendingByExecution = pendingActions.reduce((groups, action) => {
     const actions = groups.get(action.executionId) ?? [];
     actions.push(action);
@@ -79,7 +81,7 @@ function ChatPanel({ labels, onNewConversation }: {
   async function submit(event: FormEvent) {
     event.preventDefault();
     const text = input.trim();
-    if (!text || chat.isStreaming) return;
+    if (!text || busy) return;
     setInput("");
     await chat.sendMessage({ text });
   }
@@ -118,7 +120,12 @@ function ChatPanel({ labels, onNewConversation }: {
           rows={2}
           value={input}
         />
-        <button disabled={!input.trim() || chat.isStreaming} type="submit" aria-label="Send message">↑</button>
+        <button
+          aria-label={busy ? "Stop response" : "Send message"}
+          disabled={!busy && !input.trim()}
+          onClick={busy ? () => void chat.stop() : undefined}
+          type={busy ? "button" : "submit"}
+        >{busy ? "■" : "↑"}</button>
       </form>
       <p className="lemyDisclaimer">{labels.disclaimer}</p>
     </div>
@@ -142,13 +149,6 @@ export interface OpenApiAgentSidebarProps
   threadId?: string;
 }
 
-export function createLemyThreadId(): string {
-  if (typeof crypto === "undefined" || typeof crypto.randomUUID !== "function") {
-    throw new Error("createLemyThreadId requires crypto.randomUUID");
-  }
-  return crypto.randomUUID();
-}
-
 export function OpenApiAgentSidebar({
   approvedTools,
   bearerToken,
@@ -158,7 +158,7 @@ export function OpenApiAgentSidebar({
   onThreadIdChange,
   runtimeUrl,
   threadId,
-  toolApprovalMode = "ask",
+  toolApprovalMode = "mutations",
 }: OpenApiAgentSidebarProps) {
   const [internalThreadId, setInternalThreadId] = useState(() => threadId ?? createLemyThreadId());
   const activeThreadId = threadId ?? internalThreadId;

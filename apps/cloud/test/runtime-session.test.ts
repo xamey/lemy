@@ -76,4 +76,16 @@ describe("runtime sessions", () => {
       toolApprovalMode: "ask",
     }, key, 1_000)).rejects.toThrow("Runtime session expiry is invalid");
   });
+
+  it.each(["auto", "mutations", "always"] as const)("accepts the %s approval policy", async (toolApprovalMode) => {
+    await expect(createRuntimeSession({
+      approvedTools: [],
+      authorization: "Bearer customer-secret",
+      expiresAt: 1_300,
+      principal: "d".repeat(64),
+      projectId,
+      threadId,
+      toolApprovalMode,
+    }, key, 1_000)).resolves.toMatchObject({ toolApprovalMode });
+  });
 });
